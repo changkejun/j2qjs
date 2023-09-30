@@ -41,27 +41,26 @@ public class QuickJSWrapper {
 	//=========================================================================
     
     public Object evaluate(String script) {
-        return evaluate(script, UNKNOWN_FILE);
+        return evaluate(script, UNKNOWN_FILE,false);
     }
 
-    public Object evaluate(String script, String fileName) {
-    	//TODO
-    	if (script.indexOf("import")==-1) {
-            return evaluate(context, script, fileName);
-    	}else {
+    public Object evaluate(String script, String fileName, boolean isModule) {
+    	if (isModule) {
             return evaluateModule(context, script, fileName);
+    	}else {
+            return evaluate(context, script, fileName);
     	}
     }
 	//=========================================================================
     public byte[] compile(String source) {
-        return compile(source, UNKNOWN_FILE);
+        return compile(source, UNKNOWN_FILE,false);
     }
 
-    public byte[] compile(String script, String fileName) {
-    	if (script.indexOf("import")==-1) {
-            return compile(context, script, fileName, false);
-    	}else {
+    public byte[] compile(String script, String fileName, boolean isModule) {
+    	if (isModule) {
             return compile(context, script, fileName, true);
+    	}else {
+            return compile(context, script, fileName, false);
         }
     }
     public Object execute(byte[] code) {
@@ -148,26 +147,26 @@ public class QuickJSWrapper {
     }
 
     // runtime context
-    private native long createRuntime();
-    private native long createContext(long runtime);
-    private native void destroyContext(long context);
-    private native void runGC(long runtime);
+    private native synchronized long createRuntime();
+    private native synchronized long createContext(long runtime);
+    private native synchronized void destroyContext(long context);
+    private native synchronized void runGC(long runtime);
 
-    private native Object evaluate(long context, String script, String fileName);
-    private native Object evaluateModule(long context, String script, String fileName);  
-    private native byte[] compile(long context, String sourceCode, String fileName, boolean isModule); // Bytecode compile
-    private native Object execute(long context, byte[] bytecode); // Bytecode execute
+    private native synchronized Object evaluate(long context, String script, String fileName);
+    private native synchronized Object evaluateModule(long context, String script, String fileName);  
+    private native synchronized byte[] compile(long context, String sourceCode, String fileName, boolean isModule); // Bytecode compile
+    private native synchronized Object execute(long context, byte[] bytecode); // Bytecode execute
     
-    private native JSObject getGlobalObject(long context);
-    private native Object getProperty(long context, long objValue, String name);
-    private native void setProperty(long context, long objValue, String name, Object value);
-    private native int length(long context, long objValue);
-    private native Object get(long context, long objValue, int index);
-    private native void set(long context, long objValue, Object value, int index);
-    private native void freeValue(long context, long objValue);
+    private native synchronized JSObject getGlobalObject(long context);
+    private native synchronized Object getProperty(long context, long objValue, String name);
+    private native synchronized void setProperty(long context, long objValue, String name, Object value);
+    private native synchronized int length(long context, long objValue);
+    private native synchronized Object get(long context, long objValue, int index);
+    private native synchronized void set(long context, long objValue, Object value, int index);
+    private native synchronized void freeValue(long context, long objValue);
 
-    private native Object call(long context, long func, long thisObj, Object[] args);
-    private native String stringify(long context, long objValue);
-    private native Object parseJSON(long context, String json);
+    private native synchronized Object call(long context, long func, long thisObj, Object[] args);
+    private native synchronized String stringify(long context, long objValue);
+    private native synchronized Object parseJSON(long context, String json);
 
 }

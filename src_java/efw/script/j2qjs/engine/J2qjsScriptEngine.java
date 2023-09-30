@@ -46,10 +46,8 @@ public class J2qjsScriptEngine extends AbstractScriptEngine implements Invocable
 	public Object eval(String script, ScriptContext context) throws ScriptException {
 		if (context==null || context==this.context) {
 			return this.getWrapper().evaluate(script);
-		}else if (context instanceof J2qjsScriptContext) {
-			return ((J2qjsScriptContext) context).wrapper.evaluate(script);
 		}else {
-			throw new ScriptException("The context must be a instance of J2qjsScriptContext.");
+			throw new ScriptException("The context must be the orginal one created with the engine.");
 		}
 	}
 	@Override
@@ -68,9 +66,9 @@ public class J2qjsScriptEngine extends AbstractScriptEngine implements Invocable
 			throw new ScriptException(e.getMessage());
 		}
 	}
-	public Object eval(Path path) throws ScriptException, IOException {
+	public Object eval(Path path,boolean isMudule) throws ScriptException, IOException {
 		String script=new String(Files.readAllBytes(path), Charset.forName("UTF-8"));
-		return ((J2qjsScriptContext) context).wrapper.evaluate(script,path.getFileName().toString());
+		return ((J2qjsScriptContext) context).wrapper.evaluate(script,path.getFileName().toString(),isMudule);
 	}
 	/////////////////////////////////////////////////////
 	@Override
@@ -81,11 +79,8 @@ public class J2qjsScriptEngine extends AbstractScriptEngine implements Invocable
             public Object eval(final ScriptContext context) throws ScriptException {
         		if (context==null || context==J2qjsScriptEngine.this.context) {
         			return J2qjsScriptEngine.this.getWrapper().execute(complied);
-        		}else if (context instanceof J2qjsScriptContext) {
-        			byte[] complied=((J2qjsScriptContext) context).wrapper.compile(script);
-        			return ((J2qjsScriptContext) context).wrapper.execute(complied);
         		}else {
-        			throw new ScriptException("The context must be a instance of J2qjsScriptContext.");
+        			throw new ScriptException("The context must be the orginal one created with the engine.");
         		}
             }
             @Override
@@ -110,20 +105,17 @@ public class J2qjsScriptEngine extends AbstractScriptEngine implements Invocable
 			throw new ScriptException(e.getMessage());
 		}
 	}
-	public CompiledScript compile(Path path) throws ScriptException, IOException {
+	public CompiledScript compile(Path path,boolean isMudule) throws ScriptException, IOException {
 		String script=new String(Files.readAllBytes(path), Charset.forName("UTF-8"));
 		String fileName=path.getFileName().toString();
-		byte[] complied=getWrapper().compile(script,fileName);
+		byte[] complied=getWrapper().compile(script,fileName,isMudule);
         return new CompiledScript() {
             @Override
             public Object eval(final ScriptContext context) throws ScriptException {
         		if (context==null || context==J2qjsScriptEngine.this.context) {
         			return J2qjsScriptEngine.this.getWrapper().execute(complied);
-        		}else if (context instanceof J2qjsScriptContext) {
-        			byte[] complied=((J2qjsScriptContext) context).wrapper.compile(script,fileName);
-        			return ((J2qjsScriptContext) context).wrapper.execute(complied);
         		}else {
-        			throw new ScriptException("The context must be a instance of J2qjsScriptContext.");
+        			throw new ScriptException("The context must be the orginal one created with the engine.");
         		}
             }
             @Override
@@ -163,10 +155,10 @@ public class J2qjsScriptEngine extends AbstractScriptEngine implements Invocable
 	}
 	@Override
 	public <T> T getInterface(Class<T> clasz) {
-		return null;//TODO こちらの実装はむずかしいですね。
+		return null;//TODO I give up to do it.
 	}
 	@Override
 	public <T> T getInterface(Object thiz, Class<T> clasz) {
-		return null;//TODO こちらの実装はむずかしいですね。
+		return null;//TODO I give up to do it.
 	}
 }

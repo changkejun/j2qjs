@@ -1,8 +1,3 @@
-# j2qjs
-It is a ScriptEngine wrapper for QuickJS.
-
-## Samples and Tests
-```java
 package efw.script.j2qjs.test;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -76,11 +71,11 @@ public class Test {
 		System.out.println("tests/test_op_overloading.js");
 		jse.eval(Paths.get("tests/test_op_overloading.js"));
 		//System.out.println("tests/test_qjscalc.js");
-		//jse.eval(Paths.get("tests/test_qjscalc.js"));//failed at Integer TODO
+		//jse.eval(Paths.get("tests/test_qjscalc.js"));//failed at Integer
 		//System.out.println("tests/test_std.js");
-		//jse.eval(Paths.get("tests/test_std.js"));//failed at tempfile function TODO
+		//jse.eval(Paths.get("tests/test_std.js"));//failed at tempfile
 		//System.out.println("tests/test_worker.js");
-		//jse.eval(Paths.get("tests/test_worker.js"));//failed at worker TODO
+		//jse.eval(Paths.get("tests/test_worker.js"));//failed at worker
 		System.out.println("J2qjsScriptEngine.eval(script)===========");
 		System.out.println("test global type");
 		se.eval("console.log(JSON.stringify(std));");
@@ -101,15 +96,15 @@ public class Test {
 		System.out.println("tests/test_bignum.js");
 		jse.compile(Paths.get("tests/test_bignum.js")).eval();
 		//System.out.println("tests/test_bjson.js");
-		//jse.compile(Paths.get("tests/test_bjson.js")).eval();//failed because win32;
+		//jse.compile(Paths.get("tests/test_bjson.js")).eval();//failed for win32;
 		System.out.println("tests/test_op_overloading.js");
 		jse.compile(Paths.get("tests/test_op_overloading.js")).eval();
 		//System.out.println("tests/test_qjscalc.js");
-		//jse.compile(Paths.get("tests/test_qjscalc.js")).eval();//failed at Integer TODO
+		//jse.compile(Paths.get("tests/test_qjscalc.js")).eval();//failed at Integer
 		//System.out.println("tests/test_std.js");
-		//jse.compile(Paths.get("tests/test_std.js")).eval();//failed at tempfile function TODO
+		//jse.compile(Paths.get("tests/test_std.js")).eval();//failed at tempfile
 		//System.out.println("tests/test_worker.js");
-		//jse.compile(Paths.get("tests/test_worker.js")).eval();//failed at worker TODO
+		//jse.compile(Paths.get("tests/test_worker.js")).eval();//failed at worker
 		System.out.println("J2qjsScriptEngine.compile(script)========");
 		Compilable cb=(Compilable)se;
 		System.out.println("test global type");
@@ -129,7 +124,7 @@ public class Test {
 		long longvalue=(long)se.eval("12345n;");
 		System.out.println("longvalue="+longvalue);
 		//Object doublevalue2=se.eval("12345.6l;");
-		//System.out.println("doublevalue2="+doublevalue2);//failed at float64.but test_bignum.js is OK. Why?
+		//System.out.println("doublevalue2="+doublevalue2);//failed at float64;
 		String stringvalue=(String)se.eval("'abcde';");
 		System.out.println("stringvalue="+stringvalue);
 		JSObject obj=(JSObject)se.eval("var x={a:1,b:2};x;");
@@ -170,13 +165,13 @@ public class Test {
 		System.out.println("tests/test_bignum.js");
 		se.eval("std.loadModule('tests/test_bignum.js');");
 		//System.out.println("tests/test_bjson.js");
-		//_se.eval("std.loadModule('tests/test_bjson.js');");//failed because win32;
+		//_se.eval("std.loadModule('tests/test_bjson.js');");//failed for win32;
 		System.out.println("tests/test_op_overloading.js");
 		se.eval("std.loadModule('tests/test_op_overloading.js');");
 		//System.out.println("tests/test_std.js");
-		//_se.eval("std.loadModule('tests/test_std.js');");//failed at tempfile function TODO
+		//_se.eval("std.loadModule('tests/test_std.js');");//failed at tempfile
 		//System.out.println("tests/test_worker.js");
-		//_se.eval("std.loadModule('tests/test_worker.js');");//failed at worker TODO
+		//_se.eval("std.loadModule('tests/test_worker.js');");//failed at worker
 		System.out.println("std.evalScript(script)===================");
 		se.eval("std.evalScript('console.log(JSON.stringify(std))');");
 		System.out.println("std.evalModule(script)===================");
@@ -184,12 +179,22 @@ public class Test {
 		//so it must be i+mport in std.evalModule or it will be wrong.
 		se.eval("std.evalModule(\"i\"+\"mport * as std3 from 'std';globalThis.std3 = std3;\");\n"
 				+ "console.log(JSON.stringify(std3));");
+		
+		se.put(stringvalue, stringvalue);
+		se.get(stringvalue);
+		
+			/*
+			Object ff=_se.eval("function fncx(a,b){console.log(a,b);return 'xxxxx';};");
+			System.out.println(ff);
+			Invocable _ise=(Invocable)_se;
+			Object ret=_ise.invokeFunction("fncx","123","234");
+			System.out.println(ret);
+			Compilable cp=(Compilable)_se;
+			CompiledScript s=cp.compile("function hello(a,b){console.log(a,b);return 'hello';};hello(2,3);");
+			System.out.println(s.eval());
+			System.out.println(s.eval());
+			Object xa=_se.eval("loadScript('test.txt');");
+			*/
+			
 	}
 }
-```
-## Features
-- Some customizations to make it easy to call javaScript modules.
-- ScriptEngine interface maybe makes some people (or only me?) happy.
-## References
-[quickjs-wrapper](https://github.com/HarlonWang/quickjs-wrapper)<br>
-[quickjs](https://github.com/bellard/quickjs)
